@@ -39,6 +39,11 @@ distance_to(PosA, PosB) ->
         false -> board_positions() - distance_to(PosB, PosA)
     end.
 
+distance_to(forward, PosA, PosB) ->
+    distance_to(PosA, PosB);
+distance_to(backward, PosA, PosB) ->
+    distance_to(PosB, PosA).
+
 distance_to_end(Player, Position) ->
     End = end_position(Player),
     distance_to(Position, End).
@@ -85,16 +90,34 @@ blockades(#game{pawns=Pawns}) ->
           A =:= board,
           Pos =:= start_position(P)].
 
+furthest_possible_move(Max, Dir, Pos, Blockades) ->
+    % -1, because we can not move onto a blockade
+    BlockDistances = [distance_to(Dir, Pos, Block) - 1 || Block <- Blockades, Block =/= Pos],
+    lists:min([Max|BlockDistances]).
+
+pawn_movement_options(#pawn{position=Pos, player=P}, Blockades) ->
+    DistanceToEnd = distance_to_end(P, Pos),
+    ForwardUpperLimit = lists:min([12, DistanceToEnd]),
+    MaxForward = furthest_possible_move(ForwardUpperLimit, forward, Pos, Blockades),
+    ForwardPossible = case MaxForward of
+        0 -> [];
+        F -> [{1, F}]
+    end,
+    MaxBackward = -furthest_possible_move(4, backward, Pos, Blockades),
+    BackToStart = -distance_to(backward, Pos, start_position(P)),
+    BackwardPossible = case {MaxBackward, BackToStart} of
+        { 0,  _}            -> [];
+        {-1, -1}            -> [];
+        { B,  0}            -> [{-1, B}];
+        { B, -1}            -> [{-2, B}];
+        { B,  S} when B > S -> [{-1, B}];
+        { B,  B}            -> [{-1, B + 1}];
+        { B,  S} when B < S -> [{-1, S + 1}, {S + 1, B}]
+    end,
+    BackwardPossible ++ ForwardPossible.
+
 move_options(Game) ->
     CurrentPlayer = current_player(Game),
     ControlablePawns = controlable_pawns(Game, CurrentPlayer),
     BlockadePositions = blockades(Game),
-    MaxDistance =
-        [begin
-            HardLimit = distance_to_end(P, Pos) + available_finish_depth(P),
-            % Minus one since we can't move onto blockades
-            ToBlockades = [distance_to(Pos, B) - 1 || B <- BlockadePositions
-                                                    , B =/= Pos],
-            lists:min([HardLimit|ToBlockades])
-         end || #pawn{player=P, position=Pos} <- ControlablePawns],
-    MaxDistance.
+    [pawn_movement_options(Pawn, BlockadePositions) || Pawn <- ControlablePawns].
