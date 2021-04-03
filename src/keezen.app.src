@@ -5,7 +5,9 @@
   {mod, {keezen_app, []}},
   {applications,
    [kernel,
-    stdlib
+    stdlib,
+    sasl,
+    cowboy
    ]},
   {env,[]},
   {modules, []},
