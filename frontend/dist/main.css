@@ -8,8 +8,23 @@ html, body {
     box-sizing: border-box;
 }
 
+body {
+    background-color: #333;
+}
+
 #game-canvas {
     background: #fff;
     position: absolute;
     top: 0px;
+    /* center */
+    margin: 0 auto;
+    left: 0; right: 0;
+
+    /* dsi */
+    width: 240px;
+    height: 352px;
+
+    /* general */
+    width: 68vmin;
+    height: 100vmin;
 }
