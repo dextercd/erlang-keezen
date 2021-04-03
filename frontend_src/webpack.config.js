@@ -17,6 +17,6 @@ module.exports = {
     target: 'es3',
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, '../priv/script'),
+        path: path.resolve(__dirname, '../priv/static/script'),
     },
 }
