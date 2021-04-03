@@ -1,3 +1,5 @@
+import './polyfills'
+
 const canvas = document.getElementById('game-canvas') as HTMLCanvasElement | null;
 
 if (canvas === null) {
