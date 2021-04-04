@@ -1,16 +1,11 @@
 -module(keezen).
 -compile(export_all).
 
--type player_no() :: 1..4.
+-include("keezen_records.hrl").
 
 -record(pawn, {player :: player_no(),
                area :: board | finish,
                position :: non_neg_integer()}).
-
--record(player, {n :: player_no(),
-                 pawns_left :: non_neg_integer(),
-                 finished_pawns=0 :: non_neg_integer(),
-                 hand :: [any()]}).
 
 -record(game, {players :: [any()],
                pawns :: [any()],
@@ -72,8 +67,11 @@ teamates_of(2) -> [2, 4];
 teamates_of(3) -> [1, 3];
 teamates_of(4) -> [2, 4].
 
-current_player(#game{players=Ps, turn=N}) ->
+get_player(#game{players=Ps}, N) ->
     lists:nth(N, Ps).
+
+current_player(#game{turn=N}=G) ->
+    get_player(G, N).
 
 pawns_of(#game{pawns=Pawns}, PlayerNs) ->
     F = fun(P) -> lists:member(P#pawn.player, PlayerNs) end,
@@ -118,6 +116,6 @@ pawn_movement_options(#pawn{position=Pos, player=P}, Blockades) ->
 
 move_options(Game) ->
     CurrentPlayer = current_player(Game),
-    ControlablePawns = controlable_pawns(Game, CurrentPlayer),
+    Pawns = Game#game.pawns,
     BlockadePositions = blockades(Game),
-    [pawn_movement_options(Pawn, BlockadePositions) || Pawn <- ControlablePawns].
+    [pawn_movement_options(Pawn, BlockadePositions) || Pawn <- Pawns].

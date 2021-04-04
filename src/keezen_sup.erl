@@ -29,7 +29,9 @@ init([]) ->
     SupFlags = #{strategy => one_for_all,
                  intensity => 0,
                  period => 1},
-    ChildSpecs = [],
+    GameServerSpec = #{id => game_server,
+                       start => {game_server, start_link, []}},
+    ChildSpecs = [GameServerSpec],
     {ok, {SupFlags, ChildSpecs}}.
 
 %% internal functions

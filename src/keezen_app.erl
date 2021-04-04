@@ -8,7 +8,8 @@ start(_StartType, _StartArgs) ->
     Dispatch = cowboy_router:compile([
         {'_', [
             {"/static/[...]", cowboy_static, {priv_dir, keezen, "static"}},
-            {"/", cowboy_static, {priv_file, keezen, "static/index.html"}}
+            {"/", cowboy_static, {priv_file, keezen, "static/index.html"}},
+            {"/game", game_handler, {}}
         ]}
     ]),
     {ok, _} = cowboy:start_clear(my_http_listener,
