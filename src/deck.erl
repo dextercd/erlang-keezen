@@ -1,6 +1,7 @@
 -module(deck).
 
 -export([new/0, new_shuffled/0, draw/1, shuffle/1]).
+-export_type([suite/0, rank/0, card/0, deck/0]).
 
 -type suite() :: clubs | diamonds | hearts | spades.
 -type rank() :: 2..10 | jack | queen | king | ace.

@@ -106,12 +106,32 @@ drawDivot(playerPositions[1][0], playerPositions[1][1], 'purple')
 drawDivot(playerPositions[2][0], playerPositions[2][1], 'lightblue')
 drawDivot(playerPositions[3][0], playerPositions[3][1], 'black')
 
+const playCard = (suite: string, rank: string) => () => {
+  const playCardRequest = new XMLHttpRequest();
+  playCardRequest.open('POST', '/game', true);
+  playCardRequest.send(JSON.stringify([suite, rank]));
+}
+
 const playerRequest = new XMLHttpRequest();
 playerRequest.open('GET', '/game', true);
 playerRequest.onload = function(ev) {
   const response = JSON.parse(playerRequest.responseText);
   for (const option of response.options) {
     drawPawn(playerColours[option.pawn.player - 1], boardPositions[option.pawn.position][0], boardPositions[option.pawn.position][1]);
+  }
+
+  const cardsContainer = document.getElementById('cards');
+  if (cardsContainer === null)
+    throw new Error('Error in HTML.');
+
+  cardsContainer.innerHTML = '';
+  for (const [suite, rank] of response.player.hand) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.innerText = suite + ' ' + rank;
+    button.onclick = playCard(suite, rank);
+
+    cardsContainer.appendChild(button);
   }
 }
 playerRequest.send();
