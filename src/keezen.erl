@@ -32,7 +32,6 @@ new() ->
                             InitialDeck, lists:seq(1,4)),
     #game{board=Board,
           players=[#player{n=N,
-                           pawns_left=starting_pawn_count(),
                            hand=H} || {N, H} <- PlayerData],
           deck=D2,
           played_cards=[],
@@ -71,9 +70,7 @@ apply_pawn_starter(#game{board=B1, players=Players}=G, PlayerN) ->
                  position=board:start_position(PlayerN)},
     case board:place_pawn(B1, Pawn) of
         {ok, B} ->
-            {Left, [Player|Right]} = lists:split(PlayerN - 1, Players),
-            NewPlayer = Player#player{pawns_left=Player#player.pawns_left - 1},
-            {ok, G#game{board=B, players=Left ++ [NewPlayer|Right]}};
+            {ok, G#game{board=B}};
         Error ->
             Error
     end.

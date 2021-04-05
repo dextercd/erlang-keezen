@@ -33,12 +33,10 @@ pawn_option_to_ser({#pawn{player=P, area=A, position=Pos}, Ranges}) ->
             Ranges
         }].
 
-to_json({P, Movement}) ->
+to_json({Player, Movement}) ->
     jsx:encode([
         {player, [
-            {pawns_left, P#player.pawns_left},
-            {finished_pawns, P#player.finished_pawns},
-            {hand, hand_to_ser(P#player.hand)}
+            {hand, hand_to_ser(Player#player.hand)}
         ]},
         {options, [pawn_option_to_ser(P) || P <- Movement]}]).
 
