@@ -28,3 +28,28 @@ body {
     width: 68vmin;
     height: 100vmin;
 }
+
+#overlay {
+    position: absolute;
+    top: 0px;
+    /* center */
+    margin: 0 auto;
+    left: 0; right: 0;
+
+    /* dsi */
+    width: 240px;
+    height: 352px;
+
+    /* general */
+    width: 68vmin;
+    height: 100vmin;
+}
+
+#top-overlay {
+    height: 50%;
+}
+
+#bottom-overlay {
+    height: 50%;
+    padding: 10px;
+}
