@@ -4,7 +4,9 @@
   "description": "Frontend for the Dutch game Keezen.",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "webpack bundle --mode development --watch",
+    "prod": "webpack bundle --mode production"
   },
   "keywords": [
     "game",
