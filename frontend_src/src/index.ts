@@ -100,17 +100,18 @@ drawPlate()
 for(const [x, y] of boardPositions) {
   drawDivot(x, y);
 }
+
 drawDivot(playerPositions[0][0], playerPositions[0][1], 'darkgreen')
 drawDivot(playerPositions[1][0], playerPositions[1][1], 'purple')
 drawDivot(playerPositions[2][0], playerPositions[2][1], 'lightblue')
 drawDivot(playerPositions[3][0], playerPositions[3][1], 'black')
 
-drawPawn(playerColours[0], boardPositions[3][0], boardPositions[3][1])
-drawPawn(playerColours[0], boardPositions[31][0], boardPositions[31][1])
-
-drawPawn(playerColours[1], boardPositions[23][0], boardPositions[23][1])
-
-drawPawn(playerColours[2], boardPositions[32][0], boardPositions[32][1])
-drawPawn(playerColours[2], boardPositions[25][0], boardPositions[25][1])
-
-drawPawn(playerColours[3], boardPositions[12][0], boardPositions[12][1])
+const playerRequest = new XMLHttpRequest();
+playerRequest.open('GET', '/game', true);
+playerRequest.onload = function(ev) {
+  const response = JSON.parse(playerRequest.responseText);
+  for (const option of response.options) {
+    drawPawn(playerColours[option.pawn.player - 1], boardPositions[option.pawn.position][0], boardPositions[option.pawn.position][1]);
+  }
+}
+playerRequest.send();

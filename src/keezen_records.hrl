@@ -5,3 +5,6 @@
                  finished_pawns=0 :: non_neg_integer(),
                  hand :: [any()]}).
 
+-record(pawn, {player :: player_no(),
+               area :: board | finish,
+               position :: non_neg_integer()}).

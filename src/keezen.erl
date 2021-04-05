@@ -3,10 +3,6 @@
 
 -include("keezen_records.hrl").
 
--record(pawn, {player :: player_no(),
-               area :: board | finish,
-               position :: non_neg_integer()}).
-
 -record(game, {players :: [any()],
                pawns :: [any()],
                deck :: [any()],
@@ -118,4 +114,4 @@ move_options(Game) ->
     CurrentPlayer = current_player(Game),
     Pawns = Game#game.pawns,
     BlockadePositions = blockades(Game),
-    [pawn_movement_options(Pawn, BlockadePositions) || Pawn <- Pawns].
+    [{Pawn, pawn_movement_options(Pawn, BlockadePositions)} || Pawn <- Pawns].
