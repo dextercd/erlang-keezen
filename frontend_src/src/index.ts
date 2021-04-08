@@ -8,7 +8,7 @@ if (canvas === null) {
 
 const context = canvas.getContext('2d');
 
-if (context == null) {
+if (context === null) {
   throw new Error("Couldn't get rendering context.");
 }
 
