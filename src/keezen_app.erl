@@ -9,7 +9,8 @@ start(_StartType, _StartArgs) ->
         {'_', [
             {"/static/[...]", cowboy_static, {priv_dir, keezen, "static"}},
             {"/", cowboy_static, {priv_file, keezen, "static/index.html"}},
-            {"/game", game_handler, {}}
+            {"/game", game_handler, {}},
+            {"/game/events", event_handler, {}}
         ]}
     ]),
     {ok, _} = cowboy:start_clear(my_http_listener,
