@@ -40,12 +40,12 @@ new() ->
 player_has_card(Player, Card) ->
     lists:member(Card, Player#player.hand).
 
-remove_card_from_player(#game{players=Ps}=G, N, Card) ->
-    {Left, [Player|Right]} = lists:split(N - 1, Ps),
+remove_card_from_player(#game{players=Players, played_cards=Played}=Game, PlayerNumber, Card) ->
+    {Left, [Player|Right]} = lists:split(PlayerNumber - 1, Players),
     Hand = Player#player.hand,
     NewHand = Hand -- [Card],
     NewPlayer = Player#player{hand=NewHand},
-    G#game{players=Left ++ [NewPlayer|Right]}.
+    Game#game{players=Left ++ [NewPlayer|Right], played_cards=[Card|Played]}.
 
 play_card(#game{turn=N}=G, N, Card, Target) ->
     Player = get_player(G, N),
