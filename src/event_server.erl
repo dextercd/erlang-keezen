@@ -2,7 +2,7 @@
 
 -behaviour(gen_server).
 
--export([start_link/0, add_event/1, fetch_or_listen/1]).
+-export([start_link/0, add_event/1, fetch_or_listen/1, state_nr/0]).
 
 -export([init/1, handle_call/3, handle_cast/2]).
 
@@ -29,6 +29,10 @@ add_event(Event) ->
 fetch_or_listen(StateNr) ->
     gen_server:call(?NAME, {fetch_or_listen, StateNr}).
 
+-spec state_nr() -> integer().
+state_nr() ->
+    gen_server:call(?NAME, state_nr).
+
 init(_) ->
     {ok, #state{id=game_event}}.
 
@@ -41,7 +45,9 @@ handle_call({fetch_or_listen, Their}, _, #state{state_nr=Our, events=Events}=Sta
     {reply, {events, lists:reverse(lists:sublist(Events, Diff))}, State};
 handle_call({fetch_or_listen, _}, {Client, _}, #state{listeners=Listeners}=State) ->
     NewState = State#state{listeners=[Client|Listeners]},
-    {reply, listen, NewState}.
+    {reply, listen, NewState};
+handle_call(state_nr, _From, #state{state_nr=N}=State) ->
+    {reply, N, State}.
 
 send_to_all(_, _, []) ->
     ok;
