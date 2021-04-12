@@ -28,10 +28,10 @@ start_listen(Req, State) ->
     cowboy_req:cast({set_options, #{
         idle_timeout => ?TIMEOUT + 5000
     }}, Req),
-    erlang:send_after(?TIMEOUT, self(), timeout_x),
+    erlang:send_after(?TIMEOUT, self(), timeout),
     {cowboy_loop, Req, State}.
 
-info(timeout_x, Req0, State) ->
+info(timeout, Req0, State) ->
     Req = reply_events(Req0, []),
     {stop, Req, State};
 info({game_event, Events}, Req0, State) ->
