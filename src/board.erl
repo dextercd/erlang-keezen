@@ -2,7 +2,7 @@
 
 -module(board).
 
--export([new/0, move_options/1, place_pawn/2, start_position/1]).
+-export([new/0, move_options/1, place_pawn/2, start_position/1, pawns_of_player/2]).
 
 -include("keezen_records.hrl").
 
@@ -101,6 +101,19 @@ pawn_movement_options(#pawn{position=Pos, player=P}, Blockades) ->
         { B,  S} when B < S -> [{-1, S + 1}, {S + 1, B}]
     end,
     BackwardPossible ++ ForwardPossible.
+
+pawns_filter_player([P|Ps], PlayerNumber) ->
+    case P of
+        #pawn{player=PlayerNumber} ->
+            [P|pawns_filter_player(Ps, PlayerNumber)];
+        _ ->
+            pawns_filter_player(Ps, PlayerNumber)
+    end;
+pawns_filter_player([], _) ->
+    [].
+
+pawns_of_player(#board{pawns=Pawns}, PlayerNumber) ->
+    pawns_filter_player(Pawns, PlayerNumber).
 
 move_options(#board{pawns=Pawns}=Board) ->
     BlockadePositions = blockades(Board),
